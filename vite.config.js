@@ -2,6 +2,9 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
+  // Relative asset paths so the build works both at a domain root
+  // (Freebuff Sites) and under a subpath (GitHub Pages: /chemistry/).
+  base: './',
   plugins: [react()],
   server: {
     host: '0.0.0.0',
