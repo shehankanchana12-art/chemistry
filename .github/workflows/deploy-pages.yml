@@ -25,6 +25,17 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      # If Pages is still set to "Deploy from a branch", GitHub serves the raw
+      # Vite index.html (uncompiled JSX) and the page stays blank. Switch the
+      # site to the Actions build type so the step below publishes dist/.
+      - name: Point Pages at the Actions build
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api -X PUT "repos/${{ github.repository }}/pages" --input - <<'JSON' || true
+          {"build_type":"workflow"}
+          JSON
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
